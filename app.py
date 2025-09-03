@@ -1,11 +1,26 @@
 from transformers import pipeline
+import gradio as gr
 
-# Modelos como BART já suportam summarization direto
+# Inicializa o pipeline T5 para summarization (text2text-generation)
 summarizer = pipeline(
-    "summarization",
-    model="facebook/bart-large-cnn",
-    framework="pt"
+    "text2text-generation",
+    model="google-t5/t5-small",
+    framework="pt"  # força PyTorch
 )
 
-text = "Hugging Face mudou autenticação por senha para tokens ou SSH em 2023."
-print(summarizer(text, max_length=50, min_length=10))
+def summarize(text):
+    # Prefixo 'summarize:' instrui T5 a resumir
+    result = summarizer(f"summarize: {text}", max_length=50, min_length=10)
+    return result[0]['generated_text']
+
+# Interface Gradio
+iface = gr.Interface(
+    fn=summarize,
+    inputs=gr.Textbox(lines=5, placeholder="Cole seu texto aqui..."),
+    outputs=gr.Textbox(label="Resumo"),
+    title="Resumo de Texto com T5",
+    description="Digite ou cole um texto e receba um resumo curto usando T5 (PyTorch)."
+)
+
+if __name__ == "__main__":
+    iface.launch()
