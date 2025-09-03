@@ -24,7 +24,7 @@ jobs:
       - name: Add remote
         env:
           HF: ${{ secrets.HF }}
-        run: git remote add space https://huggingface.co/spaces/pablicio13/demo
+        run: git remote add space https://pablicio13:$HF@huggingface.co/spaces/pablicio13/demo
       - name: Debug Git configuration
         run: |
           git config --list
