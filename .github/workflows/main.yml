@@ -1,35 +1,23 @@
-# Getting started workflow for Github Actions
-
-name: CI
-
-# Controls when the network is running
+name: Sync to Hugging Face hub
 on:
-  # Triggers the workflow on push or pull request, but only for the main branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [main]
+
+  # to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
-# A worflow run is made up of one ore more jobs that can run sequentially or in parallel
+
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Add remote
+      - name: Add remote 
         env:
           HF: ${{ secrets.HF }}
-        run: git remote add space https://pablicio13:$HF@huggingface.co/spaces/pablicio13/demo
-      - name: Debug Git configuration
-        run: |
-          git config --list
+        run: git remote add space https://noahgift:$HF@huggingface.co/spaces/pablicio13/demo
       - name: Push to hub
-        env: 
+        env:
           HF: ${{ secrets.HF }}
-        run: git push --force https://pablicio13:$HF@huggingface.co/spaces/pablicio13/demo main
-        
+        run: git push --force https://noahgift:$HF@huggingface.co/spaces/pablicio13/demo main
