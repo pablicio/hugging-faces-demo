@@ -1,16 +1,11 @@
 from transformers import pipeline
-import gradio as gr
 
-
-model = pipeline(
+# Usa PyTorch ao invés de TensorFlow
+summarizer = pipeline(
     "summarization",
+    model="google-t5/t5-small",
+    framework="pt"  # força PyTorch
 )
 
-def predict(prompt):
-    summary = model(prompt)[0]["summary_text"]
-    return summary
-
-
-# create an interface for the model
-with gr.Interface(predict, "textbox", "text") as interface:
-    interface.launch()
+text = "O Hugging Face trocou autenticação por senha para tokens ou SSH em 2023."
+print(summarizer(text, max_length=40, min_length=10, do_sample=False))
