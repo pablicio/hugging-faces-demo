@@ -1,27 +1,11 @@
 from transformers import pipeline
-import gradio as gr
 
-# Load the summarization model
-model = pipeline("summarization")
+# Modelos como BART já suportam summarization direto
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    framework="pt"
+)
 
-
-# Define the prediction function
-def predict(prompt):
-    summary = model(prompt)[0]["summary_text"]
-    return summary
-
-
-# Set up the Gradio app
-with gr.Blocks() as demo:
-    textbox = gr.Textbox(placeholder="Enter text block to summarize", lines=4)
-    output = gr.Textbox(label="Summary", lines=3)
-    submit_button = gr.Button("Summarize")
-
-    # submit_button.click(fn=predict, inputs=textbox, outputs=output)
-    submit_button.click(
-        fn=predict, inputs=textbox, outputs=output
-    )  # pylint: disable=no-member
-
-
-# Launch the app
-demo.launch()
+text = "Hugging Face mudou autenticação por senha para tokens ou SSH em 2023."
+print(summarizer(text, max_length=50, min_length=10))
